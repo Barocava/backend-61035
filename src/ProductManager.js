@@ -1,6 +1,6 @@
 import fs from "fs";
 
-export class ProductManager {
+class ProductManager {
   constructor(path) {
     this.products = [];
     this.path = path;
@@ -13,12 +13,12 @@ export class ProductManager {
     });
   }
 
-  async addProduct({ title, description, price, thumbnail, code, stock = 0 }) {
+  async addProduct({ title, description, price, thumbnail = "", code, stock = 0, status = true, category}) {
     code = code.trim().toLowerCase();
-    if (await this.getProductByCode(code))
-      return console.log(
-        `Codigo de producto repetido ${code}. No se agrega al listado`
-      );
+    if (await this.getProductByCode(code)) {
+      console.log(`Codigo de producto repetido ${code}. No se agrega al listado`);
+      return null
+    }
 
     const product = {
       id: (await this.#getMaxId()) + 1,
@@ -28,10 +28,14 @@ export class ProductManager {
       thumbnail,
       code,
       stock,
+      status,
+      category
+
     };
     const products = await this.getProducts();
     products.push(product);
     await fs.promises.writeFile(this.path, JSON.stringify(products));
+    return "Se ha creado el producto satisfactoreamente"
   }
 
   async #getMaxId() {
@@ -59,28 +63,34 @@ export class ProductManager {
 
   async getProductById(id) {
     const products = await this.getProducts();
-    const item = products.find((product) => product.id === id);
+    const item = products.find((product) => product.id === parseInt(id));
     const indice = products.indexOf(item);
     return item ? { item, indice } : console.log("Not found");
   }
 
-  async updateProduct(objeto) {
+  async updateProduct(objeto, id) {
     const products = await this.getProducts();
-    const producto = await this.getProductById(objeto.id);
-    if (!producto)
-      return console.log("No se ha actualizado el producto. ID no encontrado");
+    const producto = await this.getProductById(id);
+    if (!producto){
+      console.log("No se ha actualizado el producto. ID no encontrado");
+      return null
+    }
     products[producto.indice] = { ...producto.item, ...objeto };
     await fs.promises.writeFile(this.path, JSON.stringify(products));
-    console.log(`Se ha actualizado el producto ${objeto.id}`);
+    return `Se ha actualizado el producto ${id}`;
   }
 
   async deleteProduct(id) {
     const products = await this.getProducts();
     const producto = await this.getProductById(id);
-    if (!producto)
-      return console.log("No se ha eliminado el producto. ID no encontrado");
+    if (!producto) {
+      console.log("No se ha eliminado el producto. ID no encontrado");
+      return null;
+    }
     products.splice(producto.indice, 1);
     await fs.promises.writeFile(this.path, JSON.stringify(products));
     console.log(`Se ha eliminado el producto ${id}`);
   }
 }
+
+export default ProductManager;
