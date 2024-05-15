@@ -77,8 +77,6 @@ class CartManager {
         if(parseInt(cart.id) === parseInt(idCart)) return cartExist
         return cart
       });
-
-      console.log(updatedCarts);
       await fs.promises.writeFile(this.path, JSON.stringify(updatedCarts));
       return cartExist 
     } catch (error) {
