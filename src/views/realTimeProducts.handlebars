@@ -1,5 +1,6 @@
 <div id="productos">
 
+{{#if carrito.length}}
 {{#each carrito}}
     <h2>Carrito {{id}}:</h2>
     {{#each products}}
@@ -7,6 +8,9 @@
     {{/each}}
     <br>
 {{/each}}
+{{else}}
+    <p>No existen carritos</p>
+{{/if}}
 
 </div>
 
