@@ -1,5 +1,4 @@
 const productsValidator = (req, res, next) => {
-    console.log(req.body);
     if(!req.body.title) return res.status(404).json({msg: 'El campo title es obligatorio'});
     if(!req.body.description) return res.status(404).json({msg: 'El campo description es obligatorio'});
     if(!req.body.code) return res.status(404).json({msg: 'El campo code es obligatorio'});
