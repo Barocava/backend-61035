@@ -1,18 +1,10 @@
 import { Router } from "express";
-import CartManager from "../CartManager.js";
+import * as controller from "../controllers/view.controllers.js";
 
 const router = Router();
 
-const cartManager = new CartManager(`./data/carts.json`);
-
-router.get("/", async (req, res,next)=>{
-  let carrito = await cartManager.getAllCarts();
-  res.render('home', {carrito});
-})
+router.get("/", controller.home);
  
-router.get("/realtimeproducts", async (req, res,next)=>{
-  let carrito = await cartManager.getAllCarts();
-  res.render('realtimeproducts', {carrito});
-})
+router.get("/realtimeproducts", controller.realTimeProducts);
 
 export default router;
