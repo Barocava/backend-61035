@@ -1,12 +1,11 @@
 <!-- carritos.handlebars -->
-<h1>Lista de Carritos de Compras2</h1>
-{{#each carritos}}
-  <div class="carrito">
-    <p>ID del Carrito: {{_id}}</p>
-    <ul>
-      {{#each products}}
-        <li>Producto ID: {{product}}, Cantidad: {{quantity}}</li>
-      {{/each}}
-    </ul>
+<h2>Lista de Productos</h1>
+<hr>
+{{#each asd2}}
+  <div>
+    <p>ID del Producto: {{_id}}</p>
+    <p>Nombre: {{title}}</p>
+    <p>Precio: {{price}}</p>
   </div>
+  <hr>
 {{/each}}

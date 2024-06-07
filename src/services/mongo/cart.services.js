@@ -6,7 +6,7 @@ const cartDao = new CartDaoMongoDB();
 
 export const getAll = async () => {
     try {
-      console.log(await cartDao.getAll());
+      //console.log(await cartDao.getAll());
       return await cartDao.getAll();
     } catch (error) {
       console.log(error);
@@ -17,7 +17,10 @@ export const getAll = async () => {
     try {
       const cart = await cartDao.getById(id);
       if (!cart) return false;
-      else return cart;
+      else {
+        //console.log(cart);       
+        return cart;
+      } 
     } catch (error) {
       console.log(error);
     }

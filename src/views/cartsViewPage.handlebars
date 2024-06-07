@@ -1,0 +1,15 @@
+<!-- carritos.handlebars -->
+<h1>Lista de Productos en el Carrito</h1>
+
+{{#if carrito.length}}
+<div>
+  <p>ID del Carrito: {{carrito._id}}</p>
+  <ul>
+    {{#each carrito.products}}
+      <li>Producto ID: {{product}}, Cantidad: {{quantity}}</li>
+    {{/each}}
+  </ul>
+</div>
+{{else}}
+    <p>No existen carritos</p>
+{{/if}}

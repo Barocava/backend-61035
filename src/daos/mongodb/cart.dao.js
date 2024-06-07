@@ -13,7 +13,7 @@ export default class CartDaoMongoDB {
 
   async getAll() {
     try {
-      return await CartModel.find({});
+      return await CartModel.find({}).lean();
     } catch (error) {
       console.log(error);
     }
@@ -21,7 +21,7 @@ export default class CartDaoMongoDB {
 
   async getById(id) {
     try {
-      return await CartModel.findById(id).populate("products.product");
+      return await CartModel.findById(id).populate("products.product").lean();
     } catch (error) {
       console.log(error);
     }
