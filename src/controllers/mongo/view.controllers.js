@@ -39,8 +39,34 @@ export const cartsView = async (req, res, next) => {
       let carrito = await service.getById(cid);
       //let carrito = JSON.parse(JSON.stringify(asd));
       //console.log(carrito._id);
-      res.render('cartsViewPage', {carrito, layout: 'main.handlebars'});
+      res.render('cartsViewPage', {layout: 'main.handlebars'});
     } catch (error) {
       next(error.message);
     }
 }; 
+
+export const login = async (req, res, next) => {
+  try {
+    res.render("login", {layout: 'main.handlebars'});
+  } catch (error) {
+    next(error.message);
+  }
+}; 
+
+export const register = async (req, res, next) => {
+  try {
+    res.render("register", {layout: 'main.handlebars'});
+  } catch (error) {
+    next(error.message);
+  }
+};
+
+export const profile = async (req, res, next) => {
+  try {
+    console.log(req.session);
+    const data =  req.session;
+    res.render("profile", {data, layout: 'main.handlebars'});
+  } catch (error) {
+    next(error.message);
+  }
+};

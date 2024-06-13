@@ -1,7 +1,5 @@
 import mongoose from 'mongoose';
-import dotenv from 'dotenv';
-
-dotenv.config({path:"../.env"});
+import 'dotenv/config';
 
 const connectionString = `mongodb+srv://${process.env.user}:${process.env.pass}@cluster0.vjbxxzu.mongodb.net/ecommerce`;
 

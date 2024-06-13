@@ -7,7 +7,10 @@ router.get("/", controller.home);
 
 router.get("/products", controller.productsView);
 router.get("/carts/:cid", controller.cartsView);
-
 router.get("/realtimeproducts", controller.realTimeProducts);
+
+router.get("/login", controller.login);
+router.get("/register", controller.register);
+router.get("/profile", controller.profile);
 
 export default router;
