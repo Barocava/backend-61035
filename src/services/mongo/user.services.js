@@ -44,3 +44,11 @@ export const logout = (req) => {
         throw new Error(error);
     }
 };
+
+export const loginResponse = async (req) => {
+  try {
+    return await userDao.getById(req.session.passport.user);
+  } catch (error) {
+    throw new Error(error);
+}
+};

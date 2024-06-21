@@ -9,7 +9,6 @@ const UserSchema = new Schema({
     },
     last_name: {
         type: String,
-        required: true
     },
     email: {
         type: String,
@@ -18,16 +17,21 @@ const UserSchema = new Schema({
     },
     age: {
         type: Number,
-        required: true
     },
-    password: {
+    password: { 
         type: String,
-        required: true
     },
     role: {
         type: String,
         default: 'user'
+    },
+    image: {
+      type: String
+    },
+    isGithub: {
+        type: Boolean,
+        default: false
     }
-});
+  });
 
 export const UserModel = model( userCollectionName, UserSchema);

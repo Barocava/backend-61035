@@ -12,24 +12,14 @@ import { errorHandler } from './middlewares/errorHandler.js';
 import handlebars from "express-handlebars";
 import { __dirname } from "./utils.js";
 import { Server } from 'socket.io';
+import { configSession } from "./config/config.session.js";
+import passport from "passport";
+import "./passport/github.js";
 import { initMongoDB } from "./db/database.js";
-import MongoStore from 'connect-mongo';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import 'dotenv/config';
 import morgan from 'morgan';
-
-const storeConfig = {
-  store: MongoStore.create({
-      mongoUrl: process.env.MONGO_URL,
-      crypto: { secret: process.env.SECRET_KEY },
-      ttl: 180,
-  }),
-  secret: process.env.SECRET_KEY,
-  resave: true,
-  saveUninitialized: true,
-  cookie: { maxAge: 180000 }
-};
 
 const app = express();
 
@@ -38,20 +28,23 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(__dirname + "\\public"));
 app.use(morgan('dev'));
 app.use(cookieParser());
-app.use(session(storeConfig));
+app.use(session(configSession));
 
 //Apartado de handlebars
 app.engine("handlebars", handlebars.engine());
 app.set("view engine", "handlebars");
 app.set("views", __dirname + "\\views");
 
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use('/api/products', productsRouter);
 app.use('/api/carts', cartsRouter);
+
 app.use('/', viewsRouter);
 app.use('/users', userRouter);
 
 app.use(errorHandler);
-
 initMongoDB();
 
 const PORT = 8080;
