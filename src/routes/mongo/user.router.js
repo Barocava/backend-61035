@@ -29,7 +29,7 @@ router.get('/profile', passport.authenticate( 'github' , {
     failureRedirect: '/login', 
     successRedirect: '/profile-github', 
     passReqToCallback: true
-}), githubResponse);
+}));
 
 router.get('/logout', (req, res) => {
     req.logout((err) => {

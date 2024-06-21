@@ -20,7 +20,8 @@ router.get("/login", (req, res) => {
   
   router.get("/profile-github", validateLogin, (req, res) => {
     console.log("req.user", req.user);
-    const user = req.user.toObject();
+    //const user = req.user.toObject();
+    const user = req.user;
     res.render("profile", { user });
   });
 

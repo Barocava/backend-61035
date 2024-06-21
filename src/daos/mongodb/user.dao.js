@@ -32,15 +32,15 @@ export default class UserDao {
         if (email === "adminCoder@coder.com" && password === "adminCod3r123") {
           return await this.model.create({
             ...user,
-            password: createHash(password), //
-            //password,
+            //password: createHash(password), //
+            password,
             role: "admin",
           });
         }
         return await this.model.create({
           ...user,
-          password: createHash(password), //
-          //password,
+          //password: createHash(password), //
+          password,
         });
       } else return false;
     } catch (error) {

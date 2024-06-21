@@ -1,7 +1,8 @@
 import { Strategy as GithubStrategy } from "passport-github2";
 import passport from "passport";
 import UserDao from "../daos/mongodb/user.dao.js";
-const userDao = new UserDao();
+import { UserModel } from "../daos/mongodb/models/user.model.js";
+const userDao = new UserDao(UserModel);
 import 'dotenv/config';
 
 const strategyConfig = {
@@ -14,6 +15,8 @@ const registerOrLogin = async (accessToken, refreshToken, profile, done) => {
   console.log(profile);
   const email = profile._json.email;
   const user = await userDao.getByEmail(email);
+  console.log("a versaaaaaa");
+  console.log(user);
   if (user) return done(null, user);
   const newUser = await userDao.register({
     first_name: profile._json.name.split(' ')[0],
@@ -27,3 +30,11 @@ const registerOrLogin = async (accessToken, refreshToken, profile, done) => {
 };
 
 passport.use("github", new GithubStrategy(strategyConfig, registerOrLogin));
+
+passport.serializeUser(function (user, done) {
+  done(null, user);
+})
+
+passport.deserializeUser(function (id, done) {
+  done(null, id);
+})
