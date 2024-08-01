@@ -1,44 +1,79 @@
-import * as service from "../services/cart.services.js";
+import Controllers from "./class.controller.js";
+import CartService from '../services/cart.services.js';
+import { createResponse } from "../utils.js";
+const cartService = new CartService();
 
-export const createCart = async (req, res, next) => {
+export default class CartController extends Controllers{
+  constructor(){
+    super(cartService)
+  }
+  addProdToCart = async (req, res, next) => {
     try {
-        const response = await service.createCart();
-        res.json(response);
-      } catch (error) {
-        next(error.message);
-      }
-};
+      // const { idCart } = req.params;
+      // console.log(req.user)
+      const { cart } = req.user;
+      const { idProd } = req.params;
+      const newProdToUserCart = await this.service.addProdToCart(
+        cart,
+        idProd,
+      );
+      if (!newProdToUserCart) createResponse(res, 404, { msg: "Error add product to cart" });
+      else createResponse(res, 200, newProdToUserCart);
+    } catch (error) {
+      next(error);
+    }
+  };
 
-export const getAllCarts = async (req, res, next) => {
+  removeProdToCart = async (req, res, next) => {
     try {
-        res.json(await service.getAllCarts());
-      } catch (error) {
-        next(error.message);
-      }
-};
+      const { idCart } = req.params;
+      const { idProd } = req.params;
+      const delProdToUserCart = await this.service.removeProdToCart(
+        idCart,
+        idProd,
+      );
+      if (!delProdToUserCart) createResponse(res, 404, { msg: "cart or prod not existant" });
+      else createResponse(res, 200, {msg: `product ${idProd} deleted to cart`});
+    } catch (error) {
+      next(error);
+    }
+  };
 
-export const getCartById = async (req, res, next) => {
+  updateProdQuantityToCart = async (req, res, next) => {
     try {
-        const { cid } = req.params;
-        let response = await service.getCartById(cid)
-        response ? 
-            res.json(response) :
-            res.json({msg:"No existe ese carrito"});
-      } catch (error) {
-        next(error.message);
-      }
-};
+      const { idCart } = req.params;
+      const { idProd } = req.params;
+      const { quantity } = req.body;
+      const  updateProdQuantity = await this.service.updateProdQuantityToCart(
+        idCart,
+        idProd,
+        quantity
+      );
+      if (!updateProdQuantity) createResponse(res, 404, { msg: "cart or prod not existant" });
+      else createResponse(res, 200, updateProdQuantity);
+    } catch (error) {
+      next(error);
+    }
+  };
 
-export const saveProductToCart = async (socket, req, res, next) => {
+  clearCart = async (req, res, next) => {
     try {
-        const { pid } = req.params;
-        const { cid } = req.params;
-        const response = await service.saveProductToCart(cid, pid);
-        const carrito = await service.getAllCarts();
-        socket.broadcast.emit("message",carrito);
-        res.json(response);
+      const { idCart } = req.params;
+      const clearCart = await this.service.clearCart(
+        idCart,
+      );
+      if (!clearCart) createResponse(res, 404, { msg: "Error clear cart" });
+      else createResponse(res, 200, clearCart);
+    } catch (error) {
+      next(error);
+    }
+  };
 
-      } catch (error) {
-        next(error.message);
-      }
-};
+}
+
+
+
+
+
+  
+  

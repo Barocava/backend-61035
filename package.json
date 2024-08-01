@@ -1,22 +1,26 @@
 {
-  "name": "backend-61035",
+  "name": "25---segunda-practica-integradora",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/server.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node .",
+    "dev": "nodemon ."
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "dotenv": "^16.4.5",
-    "express": "^4.19.2",
-    "express-handlebars": "^7.1.2",
-    "mongoose": "^8.4.1",
+    "bcryptjs": "^2.4.3",
+    "connect-mongo": "^5.1.0",
+    "cookie-parser": "^1.4.6",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "express-session": "^1.18.0",
+    "jsonwebtoken": "^9.0.0",
+    "mongoose": "^7.1.1",
     "mongoose-paginate-v2": "^1.8.2",
-    "morgan": "^1.10.0",
-    "socket.io": "^4.7.5"
+    "morgan": "^1.10.0"
   }
 }

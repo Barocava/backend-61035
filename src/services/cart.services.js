@@ -1,53 +1,64 @@
-import {__dirname} from '../utils.js';
-import CartManager from '../daos/filesystem/cart.dao.js';
+import Services from "./class.services.js";
+import ProductDaoMongoDB from "../daos/mongodb/product.dao.js";
+const prodDao = new ProductDaoMongoDB();
+import CartDaoMongoDB from "../daos/mongodb/cart.dao.js";
+const cartDao = new CartDaoMongoDB();
 
-const cartDao = new CartManager(`${__dirname}\\data\\carts.json`);
+export default class CartServices extends Services {
+  constructor() {
+    super(cartDao);
+  }
 
-export const createCart = async () => {
+  addProdToCart = async (cartId, prodId) => {
     try {
-        let response = await cartDao.createCart();
-        response ? 
-            console.log(`Se ha creado el carrito con id ${response.id}`) :  
-            console.log(`No se pudo crear el carrito`);
-        return response;
-    } catch (error) {
-        throw new Error(error);
-    }
-};
+      const existCart = await this.getById(cartId);
+      if (!existCart) return null;
+  
+      const existProd = await prodDao.getById(prodId);
+      if (!existProd) return null;
 
-export const getAllCarts = async () => {
-    try {
-        let response = await cartDao.getAllCarts();
-        typeof response === "object" ? 
-            console.log("Se devuelven todos los carritos de compra") :  
-            console.log(`No existe ningun carrito creado`);
-        return response;
+      return await this.dao.addProdToCart(cartId, prodId);
     } catch (error) {
-        throw new Error(error);
+      throw new Error(error);
     }
-};
+  };
 
-export const getCartById = async (id) => {
+  removeProdToCart = async (cartId, prodId) => {
     try {
-        let response = await cartDao.getCartById(id);
-        response ? 
-            console.log(`Se devuelve el carrito con id ${id}`) :  
-            console.log(`No existe ningun carrito creado con ese id`);
-        return response;
+      const existCart = await this.getById(cartId);
+      if(!existCart) return null;
+      const existProdInCart = await this.dao.existProdInCart(cartId, prodId);
+      if (!existProdInCart) return null;
+      return await this.dao.removeProdToCart(cartId, prodId);
     } catch (error) {
-        throw new Error(error);
+      throw new Error(error);
     }
-};
+  };
 
-export const saveProductToCart = async (idCart, idProduct) => {
+  updateProdQuantityToCart = async (cartId, prodId, quantity) => {
     try {
-        let response = await cartDao.saveProductToCart(idCart, idProduct);
-        if(response === "p") throw new Error('Product not exist');
-        else if(response === "c")throw new Error('Cart not exist');
-        else if(typeof response === "object")  console.log(`Se devuelve el carrito con el producto agregado ${JSON.stringify(response)}`);
-        else console.log(`Algo ha sucesido con la adicion del producto`);
-        return response;
+      const existCart = await this.getById(cartId);
+      // console.log("existCart-->", existCart);
+      if(!existCart) return null;
+  
+      const existProdInCart = await this.dao.existProdInCart(cartId, prodId);
+      // console.log("existProd-->", existProdInCart);
+      if (!existProdInCart) return null;
+  
+      return await this.dao.updateProdQuantityToCart(cartId, prodId, quantity);
     } catch (error) {
-        throw new Error(error);
+      throw new Error(error);
     }
-};
+  };
+
+  clearCart = async (cartId) => {
+    try {
+      const existCart = await this.getById(cartId);
+      console.log("existCart-->", existCart);
+      if (!existCart) return null;
+      return await this.dao.clearCart(cartId);
+    } catch (error) {
+      throw new Error(error);
+    }
+  };
+}
