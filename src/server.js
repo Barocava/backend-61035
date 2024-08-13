@@ -7,22 +7,24 @@ import MainRouter from './routes/index.js';
 const mainRouter = new MainRouter();
 import cookieParser from "cookie-parser";
 import session from "express-session";
+import logger, { addLogger } from './utils/logger.js';
 
 const app = express();
 
 app
     .use(json())
     .use(urlencoded({ extended: true }))
+    .use(addLogger)
     .use(morgan('dev'))
     .use(cookieParser())
     .use(session(storeConfig))
     .use('/api', mainRouter.getRouter())
     .use(errorHandler)
-
+    
 const PERSISTENCE = process.env.PERSISTENCE;
 
 if(PERSISTENCE === 'MONGO') initMongoDB();
 
 const PORT = process.env.PORT || 8080;
 
-app.listen(PORT, ()=>console.log(`Server OK PORT: ${PORT}`));
+app.listen(PORT, ()=>logger.info(`Server OK PORT: ${PORT}`));

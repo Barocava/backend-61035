@@ -3,6 +3,7 @@ import UserService from '../services/user.services.js';
 const userService = new UserService();
 import 'dotenv/config'
 import { createResponse } from '../utils.js';
+import logger from '../utils/logger.js';
 
 /**
  * Middleware que verifica si el token es válido a través de la cookie 'token'
@@ -13,7 +14,7 @@ import { createResponse } from '../utils.js';
  */
 export const checkAuth = async (req, res, next) => {
   try {
-    // console.log(req.cookies)
+    logger.debug(req.cookies)
     const token = req.cookies.token
     if (!token) return res.status(401).json({ msg: "Unhautorized" });
     const decode = jwt.verify(token, process.env.SECRET_KEY_JWT);
@@ -28,7 +29,7 @@ export const checkAuth = async (req, res, next) => {
       // 300 segundos = 5 minutos
       // Generar un nuevo token con un tiempo de expiración renovado
       const newToken = await userService.generateToken(user, "5m");
-      console.log(">>>>>>SE REFRESCÓ EL TOKEN");
+      logger.info(">>>>>>SE REFRESCÓ EL TOKEN");
       res.cookie('token', newToken, { httpOnly: true }) // Agregar el nuevo token a la cookie
     }
     req.user = user;

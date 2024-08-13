@@ -2,6 +2,7 @@ import Controllers from "./class.controller.js";
 import CartService from '../services/cart.services.js';
 import { createResponse } from "../utils.js";
 const cartService = new CartService();
+import logger from "../utils/logger.js";
 
 export default class CartController extends Controllers{
   constructor(){
@@ -10,7 +11,7 @@ export default class CartController extends Controllers{
   addProdToCart = async (req, res, next) => {
     try {
       // const { idCart } = req.params;
-      // console.log(req.user)
+      logger.debug(req.user);
       const { cart } = req.user;
       const { idProd } = req.params;
       const newProdToUserCart = await this.service.addProdToCart(

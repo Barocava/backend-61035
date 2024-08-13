@@ -1,11 +1,12 @@
 import 'dotenv/config.js';
 import { connect } from 'mongoose';
 import MongoStore from "connect-mongo";
+import logger from '../utils/logger.js';
 
 export const initMongoDB = async () => {
   try {
     await connect(process.env.MONGO_ATLAS_URL || process.env.MONGO_LOCAL_URL);
-    console.log('Conectado a la base de datos de MongoDB');
+    logger.info('Conectado a la base de datos de MongoDB');
   } catch (error) {
     throw new Error(error);
   }

@@ -1,5 +1,5 @@
 {
-  "name": "25---segunda-practica-integradora",
+  "name": "practica_con_logger",
   "version": "1.0.0",
   "description": "",
   "main": "src/server.js",
@@ -19,8 +19,10 @@
     "express": "^4.18.2",
     "express-session": "^1.18.0",
     "jsonwebtoken": "^9.0.0",
+    "log4js": "^6.9.1",
     "mongoose": "^7.1.1",
     "mongoose-paginate-v2": "^1.8.2",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "winston": "^3.14.1"
   }
 }

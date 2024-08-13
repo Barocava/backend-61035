@@ -1,4 +1,5 @@
 import fs from "fs";
+import logger from "../../utils/logger.js";
 
 export default class FSDao {
   constructor(path) {
@@ -24,7 +25,7 @@ export default class FSDao {
         return [];
       }
     } catch (error) {
-      console.log(error);
+      logger.error(error);
     }
   }
 
@@ -37,7 +38,7 @@ export default class FSDao {
       }
       return false;
     } catch (error) {
-      console.log(error);
+      logger.error(error);
     }
   }
 
@@ -52,7 +53,7 @@ export default class FSDao {
       await fs.promises.writeFile(this.path, JSON.stringify(itemsFile));
       return item;
     } catch (error) {
-      console.log(error);
+      logger.error(error);
     }
   }
 
@@ -60,7 +61,7 @@ export default class FSDao {
     try {
       const itemsFile = await this.getAll();
       const index = itemsFile.findIndex((item) => item.id === id);
-      console.log("index:::", index);
+      logger.info("index:::", index);
       if (index === -1) {
         throw new Error(`Id ${id} not found`);
       } else {
@@ -68,7 +69,7 @@ export default class FSDao {
       }
       await fs.promises.writeFile(this.path, JSON.stringify(itemsFile));
     } catch (error) {
-      console.log(error);
+      logger.error(error);
     }
   }
 
@@ -82,7 +83,7 @@ export default class FSDao {
         throw new Error(`Item id: ${id} not found`);
       }
     } catch (error) {
-      console.log(error);
+      logger.error(error);
     }
   }
 }
