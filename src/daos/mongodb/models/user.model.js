@@ -41,7 +41,15 @@ const usersSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "carts",
     default: []
-  }
+  },
+  last_connection:{
+    type: Date,
+    default: new Date
+  },
+  active: {
+    type: Boolean,
+    default: true,
+  },
 });
 const userColl = "users";
 export const UserModel = model(userColl, usersSchema);

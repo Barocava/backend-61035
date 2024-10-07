@@ -1,2 +1,6 @@
 [31merror[39m  |  08-12-2024 20:10:24  |  log error
 [31merror[39m  |  08-12-2024 20:13:20  |  log error
+[31merror[39m  |  10-06-2024 00:08:50  |  error TypeError: Cannot convert object to primitive value
+[31merror[39m  |  10-06-2024 00:14:50  |  error TypeError: Cannot convert object to primitive value
+[31merror[39m  |  10-07-2024 13:10:00  |  error TokenExpiredError: jwt expired
+[31merror[39m  |  10-07-2024 13:10:07  |  error TokenExpiredError: jwt expired

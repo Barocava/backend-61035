@@ -2,9 +2,10 @@ import Services from "./class.services.js";
 import UserDaoMongo from "../daos/mongodb/user.dao.js";
 import jwt from "jsonwebtoken";
 import "dotenv/config";
-import { createHash, isValidPassword } from "../utils.js";
+import { createHash, isValidPassword, hasBeenMoreThanXTime } from "../utils.js";
 import CartDaoMongo from "../daos/mongodb/cart.dao.js";
 import UserRepository from "../repository/user.repository.js";
+import { sendMail } from "./mailling.services.js";
 const userRepository = new UserRepository();
 
 const userDao = new UserDaoMongo();
@@ -61,7 +62,10 @@ export default class UserService extends Services {
       if (!userExist) return null;
       const passValid = isValidPassword(password, userExist);
       if (!passValid) return null;
-      if (userExist && passValid) return this.generateToken(userExist);
+      if (userExist && passValid) {
+        await this.updateLastConnection(userExist._id);
+        return this.generateToken(userExist);
+      }
     } catch (error) {
       throw new Error(error);
     }
@@ -74,4 +78,83 @@ export default class UserService extends Services {
       throw new Error(error);
     }
   };
+
+
+  //Esto es nuevo
+
+  async logout(userId) {
+    try {
+      await this.updateLastConnection(userId);
+      return { message: "Logout successful" };
+    } catch (error) {
+      throw new Error(error);
+    }
+  };
+  
+  async updateLastConnection(userId){
+    return await this.dao.update(userId,{
+      last_connection: new Date
+    });
+  };
+
+  async checkUsersLastConnection(){
+    try {
+      const usersInactive = [];
+      const users = await this.dao.getAll();
+      const formattedUsers = users.map(user => {
+        return {
+          first_name: user.first_name,
+          last_name: user.last_name,
+          email: user.email,
+          role: user.role
+        };
+      });
+      return formattedUsers;
+      /*
+      if(users.length > 0){
+        for(const user of users){
+          user.last_connection && hasBeenMoreThanXTime(user.last_connection);{
+            console.log(`han pasado mas de 48hs desde la ultima conexion: ${user._id}`);
+              await this.dao.update(user._id);{
+                active: false
+              }
+              usersInactive.push(user)
+          }
+      }
+    }
+      return usersInactive;
+      -*/
+    } catch (error) {
+      throw new Error(error)
+    }
+  };
+
+  async deleteInactiveUsers(timeLimit) {
+    try {
+      const usersToDelete = [];
+      const users = await this.dao.getAll();
+      
+      if (users.length > 0) {
+        for (const user of users) {
+          //console.log(user);
+          if (user.last_connection && hasBeenMoreThanXTime(user.last_connection, timeLimit)) {
+            console.log(`Eliminando usuario inactivo: ${user._id}`);
+            
+            // Eliminar usuario
+            await this.dao.delete(user._id);
+
+            await sendMail(user, "accountDeletion");
+            
+            usersToDelete.push(user);
+          }
+        }
+      }
+
+      return usersToDelete;
+
+    } catch (error) {
+      throw new Error(error);
+    }
+  };
+
 }

@@ -21,4 +21,12 @@ export default class UserDaoMongo extends MongoDao {
             throw new Error(error)
         }
     }
+
+    async getAll() {
+        try {
+          return await this.model.find({});
+        } catch (error) {
+          throw new Error(error);
+        }
+      }
 }
